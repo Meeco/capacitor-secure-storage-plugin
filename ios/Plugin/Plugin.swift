@@ -73,27 +73,10 @@ public class SecureStoragePlugin: CAPPlugin {
     }
     
     @objc func clear(_ call: CAPPluginCall) {
-        let keys = keychainwrapper.allKeys();
-        // cleanup standard keychain wrapper keys
-        for key in keys {
-            let hasValueStandard = KeychainWrapper.standard.hasValue(forKey: key)
-            if (hasValueStandard) {
-                let removeStandardSuccessful = KeychainWrapper.standard.removeObject(forKey: key)
-                if (!removeStandardSuccessful) {
-                    call.error("error")
-                }
-            }
-        }
-        
-        let clearSuccessful: Bool = keychainwrapper.removeAllKeys()
-        if(clearSuccessful) {
-            call.success([
-                "value": clearSuccessful
-            ])
-        }
-        else {
-            call.error("error")
-        }
+        KeychainWrapper.wipeKeychain();
+        call.success([
+            "value": true
+        ])
     }
     
     @objc func getPlatform(_ call: CAPPluginCall) {
